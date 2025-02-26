@@ -7,10 +7,6 @@ const {
   deleteUser,
 } = require("../controllers/userController");
 const verifyToken = require("../middleware/auth");
-const authController = require("../controllers/authController");
-
-// Public routes (if any)
-// router.post("/create-user", authController.register);
 
 // Protected routes (require token)
 router.get("/get-users", verifyToken, getUser);
