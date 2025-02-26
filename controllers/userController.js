@@ -68,33 +68,6 @@ const userController = {
     });
   },
 
-  createUser: (req, res) => {
-    const params = req.body;
-    const name = params.name;
-    const age = params.age;
-    const job = params.job;
-
-    const query = "INSERT INTO User (name, age, job) VALUES (?, ?, ?)";
-    const values = [name, age, job];
-
-    conn.query(query, values, (err, results) => {
-      if (err) {
-        console.error("Error executing query:", err);
-        res.error(err.sqlMessage, res);
-      } else {
-        res.status(200).json({
-          status: "success",
-          data: {
-            id: results.insertId,
-            name: name,
-            age: age,
-            job: job,
-          },
-        });
-      }
-    });
-  },
-
   deleteUser: (req, res) => {
     const id = req.params.id;
     const query = "UPDATE User SET deleted_at = NOW() WHERE id = ?";
