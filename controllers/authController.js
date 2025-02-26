@@ -3,7 +3,7 @@ const conn = require("../config/db");
 const bcrypt = require("bcrypt");
 
 // Same secret as in auth middleware
-const JWT_SECRET = "your_jwt_secret_key";
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const authController = {
   login: (req, res) => {
@@ -119,6 +119,56 @@ const authController = {
             });
           }
         );
+      });
+    });
+  },
+
+  resetPassword: (req, res) => {
+    const { username, newPassword } = req.body;
+
+    // Find user by username
+    const query = "SELECT * FROM User WHERE username = ?";
+
+    conn.query(query, [username], (err, results) => {
+      if (err) {
+        return res.status(500).json({
+          status: "error",
+          message: err.sqlMessage,
+        });
+      }
+
+      if (results.length === 0) {
+        return res.status(404).json({
+          status: "error",
+          message: "User not found",
+        });
+      }
+
+      // Hash the new password
+      bcrypt.hash(newPassword, 10, (err, hashedPassword) => {
+        if (err) {
+          return res.status(500).json({
+            status: "error",
+            message: "Password hashing failed",
+          });
+        }
+
+        // Update user password
+        const updateQuery = "UPDATE User SET password = ? WHERE username = ?";
+
+        conn.query(updateQuery, [hashedPassword, username], (err) => {
+          if (err) {
+            return res.status(500).json({
+              status: "error",
+              message: err.sqlMessage,
+            });
+          }
+
+          res.status(200).json({
+            status: "success",
+            message: "Password reset successfully",
+          });
+        });
       });
     });
   },
