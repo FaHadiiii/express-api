@@ -1,0 +1,12 @@
+API Endpoint List:
+
+Authentication:
+1. Register User: /api/register
+2. Login: /api/login
+3. Reset Password: /api/reset-password
+
+Users:
+1. Get All Users: /api/get-users
+2. Get Specific Users: /api/get-user?id={id}
+3. Update User: /api/update-user/{id}
+4. Remove User: /api/delete-user/{id}
